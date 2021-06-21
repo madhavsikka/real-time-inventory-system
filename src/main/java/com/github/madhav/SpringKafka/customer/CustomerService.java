@@ -5,6 +5,7 @@ import com.github.madhav.SpringKafka.cart.CartService;
 import com.github.madhav.SpringKafka.cart_detail.CartDetail;
 import com.github.madhav.SpringKafka.cart_detail.CartDetailService;
 import com.github.madhav.SpringKafka.item.Item;
+import com.github.madhav.SpringKafka.item.ItemService;
 import com.github.madhav.SpringKafka.purchase.Purchase;
 import com.github.madhav.SpringKafka.purchase.PurchaseService;
 import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
@@ -22,13 +23,15 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PurchaseService purchaseService;
     private final CartService cartService;
+    private final ItemService itemService;
     private final PurchaseDetailService purchaseDetailService;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, PurchaseService purchaseService, CartService cartService, PurchaseDetailService purchaseDetailService) {
+    public CustomerService(CustomerRepository customerRepository, PurchaseService purchaseService, CartService cartService, ItemService itemService, PurchaseDetailService purchaseDetailService) {
         this.customerRepository = customerRepository;
         this.purchaseService = purchaseService;
         this.cartService = cartService;
+        this.itemService = itemService;
         this.purchaseDetailService = purchaseDetailService;
     }
 
@@ -89,10 +92,18 @@ public class CustomerService {
         Double totalAmount = 0.0;
         for (CartDetail cartDetail : cartDetailSet) {
             PurchaseDetail purchaseDetail = new PurchaseDetail();
-            totalAmount += cartDetail.getAmount();
-            purchaseDetail.setAmount(cartDetail.getAmount());
-            purchaseDetail.setQuantity(cartDetail.getQuantity());
-            purchaseDetail.setItem(cartDetail.getItem());
+            Item item = cartDetail.getItem();
+            Long stock = item.getStock();
+            Long quantity = cartDetail.getQuantity();
+            Double amount = cartDetail.getAmount();
+
+            if (stock < quantity) throw new IllegalStateException("Insufficient Stock of Item");
+            itemService.updateItemStock(item.getId(), -1 * quantity);
+
+            totalAmount += amount;
+            purchaseDetail.setAmount(amount);
+            purchaseDetail.setQuantity(quantity);
+            purchaseDetail.setItem(item);
             purchaseDetail.setPurchase(purchase);
             purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
         }

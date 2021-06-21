@@ -31,6 +31,13 @@ public class ItemController {
         itemService.addNewItem(item);
     }
 
+    @PostMapping(path = "/{itemId}/add_stock")
+    public void addStock(
+            @PathVariable("itemId") Long itemId,
+            @RequestParam(name = "addedStock") Long addedStock) {
+        itemService.updateItemStock(itemId, addedStock);
+    }
+
     @DeleteMapping(path = "{itemId}")
     public void deleteItem(@PathVariable("itemId") Long itemId) {
         itemService.deleteItem(itemId);

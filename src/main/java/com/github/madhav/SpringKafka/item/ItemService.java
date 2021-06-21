@@ -39,6 +39,17 @@ public class ItemService {
     }
 
     @Transactional
+    public void updateItemStock(Long itemId, Long changeInStock) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalStateException("Item ID does not exist"));
+        Long currentStock = item.getStock();
+        if ((changeInStock < 0) && currentStock < Math.abs(changeInStock)) {
+            throw new IllegalStateException("Insufficient Stock");
+        }
+        item.setStock(currentStock + changeInStock);
+    }
+
+    @Transactional
     public void updateItem(Long itemId, Long stock, String name, Double unitPrice) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalStateException("Item ID does not exist"));
