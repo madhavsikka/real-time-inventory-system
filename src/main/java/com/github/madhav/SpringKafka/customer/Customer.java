@@ -1,9 +1,11 @@
 package com.github.madhav.SpringKafka.customer;
 
+import com.github.madhav.SpringKafka.cart.Cart;
 import com.github.madhav.SpringKafka.purchase.Purchase;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -28,11 +30,18 @@ public class Customer {
     private String email;
 
     // =============================================
+    // One-to-one mapping of customer and cart
+    // =============================================
+
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Cart cart;
+
+    // =============================================
     // One-to-many mapping of customer and purchases
     // =============================================
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Set<Purchase> purchaseSet;
+    private Set<Purchase> purchaseSet = new HashSet<>();
 
     // =============================================
     // Constructors
@@ -41,19 +50,31 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String email, String contactNumber) {
+    public Customer(String firstName, String lastName, String contactNumber, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.contactNumber = contactNumber;
+        this.email = email;
+        this.cart = new Cart();
     }
 
-    public Customer(Long id, String firstName, String lastName, String email, String contactNumber) {
+    public Customer(String firstName, String lastName, String contactNumber, String email, Cart cart, Set<Purchase> purchaseSet) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contactNumber = contactNumber;
+        this.email = email;
+        this.cart = cart;
+        this.purchaseSet = purchaseSet;
+    }
+
+    public Customer(Long id, String firstName, String lastName, String contactNumber, String email, Cart cart, Set<Purchase> purchaseSet) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.contactNumber = contactNumber;
+        this.email = email;
+        this.cart = cart;
+        this.purchaseSet = purchaseSet;
     }
 
     // =============================================
@@ -80,6 +101,14 @@ public class Customer {
         return contactNumber;
     }
 
+    public Cart getCart() {
+        return cart;
+    }
+
+    public Set<Purchase> getPurchaseSet() {
+        return purchaseSet;
+    }
+
     // =============================================
     // Setters
     // =============================================
@@ -104,7 +133,15 @@ public class Customer {
         this.contactNumber = contactNumber;
     }
 
-    public void addPurchase(Purchase purchase) {
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    public void setPurchaseSet(Set<Purchase> purchaseSet) {
+        this.purchaseSet = purchaseSet;
+    }
+
+    public void addPurchaseToCustomer(Purchase purchase) {
         purchaseSet.add(purchase);
     }
 
@@ -114,12 +151,27 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Customer{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", cart=" + cart +
+                ", purchaseSet=" + purchaseSet +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

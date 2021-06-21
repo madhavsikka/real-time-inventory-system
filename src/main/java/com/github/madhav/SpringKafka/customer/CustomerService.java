@@ -1,26 +1,35 @@
 package com.github.madhav.SpringKafka.customer;
 
-import com.github.madhav.SpringKafka.item.ItemService;
+import com.github.madhav.SpringKafka.cart.Cart;
+import com.github.madhav.SpringKafka.cart.CartService;
+import com.github.madhav.SpringKafka.cart_detail.CartDetail;
+import com.github.madhav.SpringKafka.cart_detail.CartDetailService;
+import com.github.madhav.SpringKafka.item.Item;
 import com.github.madhav.SpringKafka.purchase.Purchase;
 import com.github.madhav.SpringKafka.purchase.PurchaseService;
+import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
+import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final PurchaseService purchaseService;
+    private final CartService cartService;
+    private final PurchaseDetailService purchaseDetailService;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository, PurchaseService purchaseService) {
+    public CustomerService(CustomerRepository customerRepository, PurchaseService purchaseService, CartService cartService, PurchaseDetailService purchaseDetailService) {
         this.customerRepository = customerRepository;
         this.purchaseService = purchaseService;
+        this.cartService = cartService;
+        this.purchaseDetailService = purchaseDetailService;
     }
 
     public List<Customer> getCustomers() {
@@ -32,6 +41,15 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalStateException("Customer ID does not exist"));
     }
 
+    public void addCartDetailToCustomerCart(Long customerId, Long cartDetailId) {
+        Customer customer = getCustomerById(customerId);
+        Cart cart = customer.getCart();
+        if (Objects.isNull(cart)) {
+            throw new IllegalStateException("Cart does not exist");
+        }
+        cartService.addCartDetailToCart(cart.getId(), cartDetailId);
+    }
+
     public void addNewCustomer(Customer customer) {
         Optional<Customer> customerOptional = customerRepository
                 .findCustomerByEmail(customer.getEmail());
@@ -40,27 +58,60 @@ public class CustomerService {
             throw new IllegalStateException("Email already taken");
         }
         customerRepository.save(customer);
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartService.addNewCart(cart);
+        customer.setCart(cart);
         System.out.println(customer);
     }
 
-    @Transactional
-    public void addPurchaseToCustomer(Long customerId, Long purchaseId) {
+    public void addItemToCart(Long customerId, Long itemId, Long quantity) {
         Customer customer = getCustomerById(customerId);
-        Purchase purchase = purchaseService.getPurchaseById(purchaseId);
-        if (Objects.nonNull(purchase.getCustomer())) {
-            throw new IllegalStateException("Purchase already has a customer");
+        Cart cart = customer.getCart();
+        if (Objects.isNull(cart)) {
+            throw new IllegalStateException("Cart does not exist");
         }
-        customer.addPurchase(purchase);
-        purchase.setCustomer(customer);
+        cartService.addItemToCart(cart.getId(), itemId, quantity);
     }
 
+    @Transactional
+    public void buyCart(Long customerId) {
+        Customer customer = getCustomerById(customerId);
+        Cart cart = customer.getCart();
+        if (Objects.isNull(cart)) {
+            throw new IllegalStateException("Cart does not exist");
+        }
+        Set<CartDetail> cartDetailSet = cart.getCartDetailSet();
+
+        Purchase purchase = new Purchase();
+        purchase.setCustomer(customer);
+
+        Double totalAmount = 0.0;
+        for (CartDetail cartDetail : cartDetailSet) {
+            PurchaseDetail purchaseDetail = new PurchaseDetail();
+            totalAmount += cartDetail.getAmount();
+            purchaseDetail.setAmount(cartDetail.getAmount());
+            purchaseDetail.setQuantity(cartDetail.getQuantity());
+            purchaseDetail.setItem(cartDetail.getItem());
+            purchaseDetail.setPurchase(purchase);
+            purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
+        }
+
+        purchase.setTotalAmount(totalAmount);
+        purchase.setStatus("ORDER RECEIVED");
+        purchase.setPurchaseDate(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
+
+        customer.addPurchaseToCustomer(purchaseService.addNewPurchase(purchase));
+        cartService.clearCart(cart.getId());
+    }
+
+    @Transactional
     public void deleteCustomer(Long customerId) {
         if (!customerRepository.existsById(customerId)) {
             throw new IllegalStateException("Customer ID: " + customerId + " does not exist");
         }
         customerRepository.deleteById(customerId);
     }
-
 
     @Transactional
     public void updateCustomer(Long customerId, String firstName, String lastName,

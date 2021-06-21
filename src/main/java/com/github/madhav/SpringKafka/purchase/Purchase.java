@@ -1,17 +1,16 @@
 package com.github.madhav.SpringKafka.purchase;
 
-import com.github.madhav.SpringKafka.address.Address;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.madhav.SpringKafka.customer.Customer;
 import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "PURCHASE")
 public class Purchase {
 
     @Id
@@ -27,31 +26,28 @@ public class Purchase {
     @Column(name = "PURCHASE_ID")
     private Long id;
     private Double totalAmount;
-    private LocalDate purchaseDate;
+    private String purchaseDate;
     private String status;
+    private String deliveryName;
+    private String deliveryAddressLine1;
+    private String deliveryAddressLine2;
+    private String deliveryCity;
+    private String deliveryState;
+    private String deliveryPostalCode;
+    private String deliveryContactNumber;
+
+
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.REMOVE)
+    private Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
 
     // =============================================
     // Many-to-one mapping of customer and purchases
     // =============================================
 
     @ManyToOne
-    @JoinColumn(name = "CUSTOMER_ID")
+    @JoinColumn(name = "FK_CUSTOMER_ID")
+    @JsonIgnore
     private Customer customer;
-
-    // =============================================
-    // Many-to-one mapping of purchases and address
-    // =============================================
-
-    @ManyToOne
-    @JoinColumn(name = "ADDRESS_ID")
-    private Address address;
-
-    // ===================================================
-    // One-to-many mapping of purchase and purchaseDetails
-    // ===================================================
-
-    @OneToMany(mappedBy = "purchase", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
 
     // =============================================
     // Constructors
@@ -60,21 +56,35 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(Double totalAmount, LocalDate purchaseDate, String status, Customer customer, Address address) {
+    public Purchase(Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, Set<PurchaseDetail> purchaseDetailSet, Customer customer) {
         this.totalAmount = totalAmount;
         this.purchaseDate = purchaseDate;
         this.status = status;
+        this.deliveryName = deliveryName;
+        this.deliveryAddressLine1 = deliveryAddressLine1;
+        this.deliveryAddressLine2 = deliveryAddressLine2;
+        this.deliveryCity = deliveryCity;
+        this.deliveryState = deliveryState;
+        this.deliveryPostalCode = deliveryPostalCode;
+        this.deliveryContactNumber = deliveryContactNumber;
+        this.purchaseDetailSet = purchaseDetailSet;
         this.customer = customer;
-        this.address = address;
     }
 
-    public Purchase(Long id, Double totalAmount, LocalDate purchaseDate, String status, Customer customer, Address address) {
+    public Purchase(Long id, Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, Set<PurchaseDetail> purchaseDetailSet, Customer customer) {
         this.id = id;
         this.totalAmount = totalAmount;
         this.purchaseDate = purchaseDate;
         this.status = status;
+        this.deliveryName = deliveryName;
+        this.deliveryAddressLine1 = deliveryAddressLine1;
+        this.deliveryAddressLine2 = deliveryAddressLine2;
+        this.deliveryCity = deliveryCity;
+        this.deliveryState = deliveryState;
+        this.deliveryPostalCode = deliveryPostalCode;
+        this.deliveryContactNumber = deliveryContactNumber;
+        this.purchaseDetailSet = purchaseDetailSet;
         this.customer = customer;
-        this.address = address;
     }
 
     // =============================================
@@ -89,7 +99,7 @@ public class Purchase {
         return totalAmount;
     }
 
-    public LocalDate getPurchaseDate() {
+    public String getPurchaseDate() {
         return purchaseDate;
     }
 
@@ -97,12 +107,40 @@ public class Purchase {
         return status;
     }
 
+    public String getDeliveryName() {
+        return deliveryName;
+    }
+
+    public String getDeliveryAddressLine1() {
+        return deliveryAddressLine1;
+    }
+
+    public String getDeliveryAddressLine2() {
+        return deliveryAddressLine2;
+    }
+
+    public String getDeliveryCity() {
+        return deliveryCity;
+    }
+
+    public String getDeliveryState() {
+        return deliveryState;
+    }
+
+    public String getDeliveryPostalCode() {
+        return deliveryPostalCode;
+    }
+
+    public String getDeliveryContactNumber() {
+        return deliveryContactNumber;
+    }
+
     public Customer getCustomer() {
         return customer;
     }
 
-    public Address getAddress() {
-        return address;
+    public Set<PurchaseDetail> getPurchaseDetailSet() {
+        return purchaseDetailSet;
     }
 
     // =============================================
@@ -117,7 +155,7 @@ public class Purchase {
         this.totalAmount = totalAmount;
     }
 
-    public void setPurchaseDate(LocalDate purchaseDate) {
+    public void setPurchaseDate(String purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
@@ -125,15 +163,43 @@ public class Purchase {
         this.status = status;
     }
 
+    public void setDeliveryName(String deliveryName) {
+        this.deliveryName = deliveryName;
+    }
+
+    public void setDeliveryAddressLine1(String deliveryAddressLine1) {
+        this.deliveryAddressLine1 = deliveryAddressLine1;
+    }
+
+    public void setDeliveryAddressLine2(String deliveryAddressLine2) {
+        this.deliveryAddressLine2 = deliveryAddressLine2;
+    }
+
+    public void setDeliveryCity(String deliveryCity) {
+        this.deliveryCity = deliveryCity;
+    }
+
+    public void setDeliveryState(String deliveryState) {
+        this.deliveryState = deliveryState;
+    }
+
+    public void setDeliveryPostalCode(String deliveryPostalCode) {
+        this.deliveryPostalCode = deliveryPostalCode;
+    }
+
+    public void setDeliveryContactNumber(String deliveryContactNumber) {
+        this.deliveryContactNumber = deliveryContactNumber;
+    }
+
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setPurchaseDetailSet(Set<PurchaseDetail> purchaseDetailSet) {
+        this.purchaseDetailSet = purchaseDetailSet;
     }
 
-    public void addPurchaseDetail(PurchaseDetail purchaseDetail) {
+    public void addPurchaseDetailToPurchase(PurchaseDetail purchaseDetail) {
         purchaseDetailSet.add(purchaseDetail);
     }
 
@@ -146,10 +212,16 @@ public class Purchase {
         return "Purchase{" +
                 "id=" + id +
                 ", totalAmount=" + totalAmount +
-                ", purchaseDate=" + purchaseDate +
+                ", purchaseDate='" + purchaseDate + '\'' +
                 ", status='" + status + '\'' +
+                ", deliveryName='" + deliveryName + '\'' +
+                ", deliveryAddressLine1='" + deliveryAddressLine1 + '\'' +
+                ", deliveryAddressLine2='" + deliveryAddressLine2 + '\'' +
+                ", deliveryCity='" + deliveryCity + '\'' +
+                ", deliveryState='" + deliveryState + '\'' +
+                ", deliveryPostalCode='" + deliveryPostalCode + '\'' +
+                ", deliveryContactNumber='" + deliveryContactNumber + '\'' +
                 ", customer=" + customer +
-                ", address=" + address +
                 '}';
     }
 
@@ -163,9 +235,6 @@ public class Purchase {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
+        return Objects.hash(id);
     }
 }

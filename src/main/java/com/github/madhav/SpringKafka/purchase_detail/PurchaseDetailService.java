@@ -1,7 +1,7 @@
 package com.github.madhav.SpringKafka.purchase_detail;
 
 import com.github.madhav.SpringKafka.item.Item;
-import com.github.madhav.SpringKafka.item.ItemService;
+import com.github.madhav.SpringKafka.purchase.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,13 +12,11 @@ import java.util.Objects;
 @Service
 public class PurchaseDetailService {
 
-    private final PurchaseDetailRepository purchaseDetailRepository;
-    private final ItemService itemService;
+    PurchaseDetailRepository purchaseDetailRepository;
 
     @Autowired
-    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository, ItemService itemService) {
+    public PurchaseDetailService(PurchaseDetailRepository purchaseDetailRepository) {
         this.purchaseDetailRepository = purchaseDetailRepository;
-        this.itemService = itemService;
     }
 
     public List<PurchaseDetail> getPurchaseDetails() {
@@ -30,31 +28,14 @@ public class PurchaseDetailService {
                 .orElseThrow(() -> new IllegalStateException("Purchase Detail ID does not exist"));
     }
 
-    public void addNewPurchaseDetail(PurchaseDetail purchaseDetail) {
-        purchaseDetailRepository.save(purchaseDetail);
-        System.out.println(purchaseDetail);
-    }
-
-    public void deletePurchaseDetail(Long purchaseDetailId) {
-        if (!purchaseDetailRepository.existsById(purchaseDetailId)) {
-            throw new IllegalStateException("Purchase Detail ID does not exist");
-        }
-        purchaseDetailRepository.deleteById(purchaseDetailId);
+    public PurchaseDetail addNewPurchaseDetail(PurchaseDetail purchaseDetail) {
+        return purchaseDetailRepository.save(purchaseDetail);
     }
 
     @Transactional
-    public void addItemToPurchaseDetail(Long purchaseDetailId, Long itemId) {
-        PurchaseDetail purchaseDetail = getPurchaseDetailById(purchaseDetailId);
-        Item item = itemService.getItemById(itemId);
-        if (Objects.nonNull(purchaseDetail.getItem())) {
-            throw new IllegalStateException("Item already assigned to Purchase Detail");
-        }
-        purchaseDetail.setItem(item);
-        purchaseDetailRepository.save(purchaseDetail);
-    }
+    public PurchaseDetail updatePurchaseDetail(Long purchaseDetailId, Long quantity, Double amount,
+                                               Purchase purchase, Item item) {
 
-    @Transactional
-    public void updatePurchaseDetail(Long purchaseDetailId, Long quantity, Double amount) {
         PurchaseDetail purchaseDetail = purchaseDetailRepository.findById(purchaseDetailId)
                 .orElseThrow(() -> new IllegalStateException("Purchase Detail ID does not exist"));
 
@@ -64,6 +45,13 @@ public class PurchaseDetailService {
         if (amount > 0 && !Objects.equals(amount, purchaseDetail.getAmount())) {
             purchaseDetail.setAmount(amount);
         }
+        if (purchase != null && !Objects.equals(purchase, purchaseDetail.getPurchase())) {
+            purchaseDetail.setPurchase(purchase);
+        }
+        if (item != null && !Objects.equals(item, purchaseDetail.getItem())) {
+            purchaseDetail.setItem(item);
+        }
+        return purchaseDetail;
     }
 
 }

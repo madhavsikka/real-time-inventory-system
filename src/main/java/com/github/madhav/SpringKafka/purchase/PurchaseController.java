@@ -51,22 +51,10 @@ public class PurchaseController {
         purchaseService.addAddressToPurchase(purchaseId, addressId);
     }
 
-    @PostMapping(path = "/{purchaseId}/purchase_details/{purchaseDetailId}/add")
-    public void addPurchaseDetailToPurchase(
-            @PathVariable("purchaseId") Long purchaseId,
-            @PathVariable("purchaseDetailId") Long purchaseDetailId) {
-        purchaseService.addPurchaseDetailToPurchase(purchaseId, purchaseDetailId);
-    }
-
-    // NOTE for future use
-    // @PutMapping("/orders/{id}/complete")
-    // @PutMapping("/orders/{id}/shipped")
-    // content/v2.1/{merchantId}/orders/{orderId}/updateShipment
-    // {
-    //  "shipmentId": string,
-    //  "status": string,
-    //  "trackingId": string,
-    //  "deliveryDate": string,
-    //}
-
+//    @PostMapping(path = "/{purchaseId}/purchase_details/{purchaseDetailId}/add")
+//    public void addPurchaseDetailToPurchase(
+//            @PathVariable("purchaseId") Long purchaseId,
+//            @PathVariable("purchaseDetailId") Long purchaseDetailId) {
+//        purchaseService.addPurchaseDetailToPurchase(purchaseId, purchaseDetailId);
+//    }
 }

@@ -1,27 +1,28 @@
-package com.github.madhav.SpringKafka.purchase_detail;
+package com.github.madhav.SpringKafka.cart_detail;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.madhav.SpringKafka.cart.Cart;
 import com.github.madhav.SpringKafka.item.Item;
-import com.github.madhav.SpringKafka.purchase.Purchase;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "PURCHASE_DETAIL")
-public class PurchaseDetail {
+@Table(name = "CART_DETAIL")
+public class CartDetail {
 
     @Id
     @SequenceGenerator(
-            name = "purchase_detail_sequence",
-            sequenceName = "purchase_detail_sequence",
+            name = "cart_detail_sequence",
+            sequenceName = "cart_detail_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "purchase_detail_sequence"
+            generator = "cart_detail_sequence"
     )
-    @Column(name = "PURCHASE_DETAIL_ID")
+    @Column(name = "CART_DETAIL_ID")
     private Long id;
     private Long quantity;
     private Double amount;
@@ -31,9 +32,9 @@ public class PurchaseDetail {
     // =======================================================
 
     @ManyToOne
-    @JoinColumn(name = "FK_PURCHASE_ID")
+    @JoinColumn(name = "FK_CART_ID")
     @JsonIgnore
-    private Purchase purchase;
+    private Cart cart;
 
     // ===================================================
     // Many-to-one mapping of purchase details and item
@@ -47,28 +48,31 @@ public class PurchaseDetail {
     // Constructors
     // =============================================
 
-    public PurchaseDetail() {
+    public CartDetail() {
     }
 
-    public PurchaseDetail(Long quantity, Double amount, Purchase purchase, Item item) {
+    public CartDetail(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public CartDetail(Long quantity, Double amount, Cart cart, Item item) {
         this.quantity = quantity;
         this.amount = amount;
-        this.purchase = purchase;
+        this.cart = cart;
         this.item = item;
     }
 
-    public PurchaseDetail(Long id, Long quantity, Double amount, Purchase purchase, Item item) {
+    public CartDetail(Long id, Long quantity, Double amount, Cart cart, Item item) {
         this.id = id;
         this.quantity = quantity;
         this.amount = amount;
-        this.purchase = purchase;
+        this.cart = cart;
         this.item = item;
     }
 
     // =============================================
     // Getters
     // =============================================
-
 
     public Long getId() {
         return id;
@@ -82,8 +86,8 @@ public class PurchaseDetail {
         return amount;
     }
 
-    public Purchase getPurchase() {
-        return purchase;
+    public Cart getCart() {
+        return cart;
     }
 
     public Item getItem() {
@@ -93,7 +97,6 @@ public class PurchaseDetail {
     // =============================================
     // Setters
     // =============================================
-
 
     public void setId(Long id) {
         this.id = id;
@@ -107,21 +110,25 @@ public class PurchaseDetail {
         this.amount = amount;
     }
 
-    public void setPurchase(Purchase purchase) {
-        this.purchase = purchase;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public void setItem(Item item) {
         this.item = item;
     }
 
+    // =============================================
+    // toString
+    // =============================================
+
     @Override
     public String toString() {
-        return "PurchaseDetail{" +
+        return "CartDetail{" +
                 "id=" + id +
                 ", quantity=" + quantity +
                 ", amount=" + amount +
-                ", purchase=" + purchase +
+                ", cart=" + cart +
                 ", item=" + item +
                 '}';
     }
@@ -130,12 +137,15 @@ public class PurchaseDetail {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PurchaseDetail that = (PurchaseDetail) o;
+        CartDetail that = (CartDetail) o;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (id ^ (id >>> 32));
+        return result;
     }
 }
