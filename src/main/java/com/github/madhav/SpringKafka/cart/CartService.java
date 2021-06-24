@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Service
 public class CartService {
@@ -62,7 +61,7 @@ public class CartService {
     @Transactional
     public void clearCart(Long cartId) {
         Cart cart = getCartById(cartId);
-        Set<CartDetail> cartDetailSet = cart.getCartDetailSet();
+        List<CartDetail> cartDetailSet = cart.getCartDetailList();
         cartDetailSet.clear();
     }
 }

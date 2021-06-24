@@ -138,14 +138,11 @@ public class CartDetail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CartDetail that = (CartDetail) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(quantity, that.quantity) && Objects.equals(amount, that.amount) && Objects.equals(item, that.item);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
+        return Objects.hash(quantity, amount, item);
     }
 }

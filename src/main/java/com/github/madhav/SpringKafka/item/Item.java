@@ -1,6 +1,11 @@
 package com.github.madhav.SpringKafka.item;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.madhav.SpringKafka.item_detail.ItemDetail;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -23,11 +28,29 @@ public class Item {
     private String name;
     private Double unitPrice;
 
+    // =======================================================
+    // Many-to-many relationship between warehouses and items
+    // =======================================================
+
+//    @ManyToMany(mappedBy = "itemSet", fetch = FetchType.LAZY)
+//    private Set<Warehouse> warehouseSet = new HashSet<>();
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<ItemDetail> itemDetailList = new ArrayList<>();
+
     // =============================================
     // Constructors
     // =============================================
 
     public Item() {
+    }
+
+    public Item(String name, Double unitPrice, List<ItemDetail> itemDetailList) {
+        this.name = name;
+        this.stock = 0L;
+        this.unitPrice = unitPrice;
+        this.itemDetailList = itemDetailList;
     }
 
     public Item(Long stock, String name, Double unitPrice) {
@@ -63,6 +86,10 @@ public class Item {
         return unitPrice;
     }
 
+    public List<ItemDetail> getItemDetailList() {
+        return itemDetailList;
+    }
+
 
     // =============================================
     // Setters
@@ -84,6 +111,10 @@ public class Item {
         this.unitPrice = unitPrice;
     }
 
+    public void addItemDetail(ItemDetail itemDetail) {
+        itemDetailList.add(itemDetail);
+    }
+
     // =============================================
     // Hash Code
     // =============================================
@@ -93,15 +124,12 @@ public class Item {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return Objects.equals(id, item.id);
+        return Objects.equals(name, item.name) && Objects.equals(unitPrice, item.unitPrice);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (id ^ (id >>> 32));
-        return result;
+        return Objects.hash(name, unitPrice);
     }
 
     // =============================================
@@ -115,6 +143,7 @@ public class Item {
                 ", stock=" + stock +
                 ", name='" + name + '\'' +
                 ", unitPrice=" + unitPrice +
+                ", itemDetailList=" + itemDetailList +
                 '}';
     }
 }

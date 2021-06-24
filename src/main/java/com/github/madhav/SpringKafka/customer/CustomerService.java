@@ -3,7 +3,6 @@ package com.github.madhav.SpringKafka.customer;
 import com.github.madhav.SpringKafka.cart.Cart;
 import com.github.madhav.SpringKafka.cart.CartService;
 import com.github.madhav.SpringKafka.cart_detail.CartDetail;
-import com.github.madhav.SpringKafka.cart_detail.CartDetailService;
 import com.github.madhav.SpringKafka.item.Item;
 import com.github.madhav.SpringKafka.item.ItemService;
 import com.github.madhav.SpringKafka.purchase.Purchase;
@@ -15,7 +14,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -84,7 +86,7 @@ public class CustomerService {
         if (Objects.isNull(cart)) {
             throw new IllegalStateException("Cart does not exist");
         }
-        Set<CartDetail> cartDetailSet = cart.getCartDetailSet();
+        List<CartDetail> cartDetailSet = cart.getCartDetailList();
 
         Purchase purchase = new Purchase();
         purchase.setCustomer(customer);
@@ -98,7 +100,7 @@ public class CustomerService {
             Double amount = cartDetail.getAmount();
 
             if (stock < quantity) throw new IllegalStateException("Insufficient Stock of Item");
-            itemService.updateItemStock(item.getId(), -1 * quantity);
+            itemService.reduceItemStock(item.getId(), quantity);
 
             totalAmount += amount;
             purchaseDetail.setAmount(amount);

@@ -31,11 +31,11 @@ public class ItemController {
         itemService.addNewItem(item);
     }
 
-    @PostMapping(path = "/{itemId}/add_stock")
+    @PostMapping(path = "/{itemId}/reduce_stock")
     public void addStock(
             @PathVariable("itemId") Long itemId,
-            @RequestParam(name = "addedStock") Long addedStock) {
-        itemService.updateItemStock(itemId, addedStock);
+            @RequestParam(name = "reduceStock") Long reduceStock) {
+        itemService.reduceItemStock(itemId, reduceStock);
     }
 
     @DeleteMapping(path = "{itemId}")
@@ -43,12 +43,4 @@ public class ItemController {
         itemService.deleteItem(itemId);
     }
 
-    @PutMapping(path = "{itemId}")
-    public void updateItem(
-            @PathVariable("itemId") Long itemId,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) Long stock,
-            @RequestParam(required = false) Double unitPrice) {
-        itemService.updateItem(itemId, stock, name, unitPrice);
-    }
 }

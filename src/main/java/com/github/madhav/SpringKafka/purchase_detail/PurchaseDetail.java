@@ -131,11 +131,11 @@ public class PurchaseDetail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseDetail that = (PurchaseDetail) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(quantity, that.quantity) && Objects.equals(amount, that.amount) && Objects.equals(purchase, that.purchase) && Objects.equals(item, that.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(quantity, amount, purchase, item);
     }
 }

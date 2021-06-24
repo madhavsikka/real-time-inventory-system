@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 public class ItemConfig {
@@ -14,12 +13,12 @@ public class ItemConfig {
     CommandLineRunner itemCommandLineRunner(ItemRepository repository) {
         return args -> {
             Item nike = new Item(
-                    10L,
+                    0L,
                     "Nike AirForce 1",
                     7400.0
             );
             Item adidas = new Item(
-                    200L,
+                    0L,
                     "Adidas OG T-Shirt",
                     1500.0
             );

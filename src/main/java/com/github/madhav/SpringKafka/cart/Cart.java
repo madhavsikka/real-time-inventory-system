@@ -1,13 +1,13 @@
 package com.github.madhav.SpringKafka.cart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.madhav.SpringKafka.customer.Customer;
 import com.github.madhav.SpringKafka.cart_detail.CartDetail;
+import com.github.madhav.SpringKafka.customer.Customer;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "CART")
@@ -39,7 +39,7 @@ public class Cart {
     // ===================================================
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartDetail> cartDetailSet = new HashSet<>();
+    private List<CartDetail> cartDetailList = new ArrayList<>();
 
     // ===================================================
     // Constructors
@@ -49,15 +49,15 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Long id, Customer customer, Set<CartDetail> cartDetailSet) {
-        this.id = id;
+    public Cart(Customer customer, List<CartDetail> cartDetailList) {
         this.customer = customer;
-        this.cartDetailSet = cartDetailSet;
+        this.cartDetailList = cartDetailList;
     }
 
-    public Cart(Customer customer, Set<CartDetail> cartDetailSet) {
+    public Cart(Long id, Customer customer, List<CartDetail> cartDetailList) {
+        this.id = id;
         this.customer = customer;
-        this.cartDetailSet = cartDetailSet;
+        this.cartDetailList = cartDetailList;
     }
 
     // ===================================================
@@ -72,8 +72,8 @@ public class Cart {
         return customer;
     }
 
-    public Set<CartDetail> getCartDetailSet() {
-        return cartDetailSet;
+    public List<CartDetail> getCartDetailList() {
+        return cartDetailList;
     }
 
     public void setId(Long id) {
@@ -84,16 +84,16 @@ public class Cart {
         this.customer = customer;
     }
 
-    public void setCartDetailSet(Set<CartDetail> cartDetailSet) {
-        this.cartDetailSet = cartDetailSet;
+    public void setCartDetailList(List<CartDetail> cartDetailSet) {
+        this.cartDetailList = cartDetailSet;
     }
 
     public void addCartDetailToCart(CartDetail cartDetail) {
-        cartDetailSet.add(cartDetail);
+        cartDetailList.add(cartDetail);
     }
 
     public void clearCart() {
-        cartDetailSet.clear();
+        cartDetailList.clear();
     }
 
     @Override

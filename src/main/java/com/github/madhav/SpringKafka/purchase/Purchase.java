@@ -5,9 +5,9 @@ import com.github.madhav.SpringKafka.customer.Customer;
 import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "PURCHASE")
@@ -38,7 +38,7 @@ public class Purchase {
 
 
     @OneToMany(mappedBy = "purchase", cascade = CascadeType.REMOVE)
-    private Set<PurchaseDetail> purchaseDetailSet = new HashSet<>();
+    private List<PurchaseDetail> purchaseDetailList = new ArrayList<>();
 
     // =============================================
     // Many-to-one mapping of customer and purchases
@@ -56,7 +56,7 @@ public class Purchase {
     public Purchase() {
     }
 
-    public Purchase(Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, Set<PurchaseDetail> purchaseDetailSet, Customer customer) {
+    public Purchase(Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, List<PurchaseDetail> purchaseDetailList, Customer customer) {
         this.totalAmount = totalAmount;
         this.purchaseDate = purchaseDate;
         this.status = status;
@@ -67,11 +67,11 @@ public class Purchase {
         this.deliveryState = deliveryState;
         this.deliveryPostalCode = deliveryPostalCode;
         this.deliveryContactNumber = deliveryContactNumber;
-        this.purchaseDetailSet = purchaseDetailSet;
+        this.purchaseDetailList = purchaseDetailList;
         this.customer = customer;
     }
 
-    public Purchase(Long id, Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, Set<PurchaseDetail> purchaseDetailSet, Customer customer) {
+    public Purchase(Long id, Double totalAmount, String purchaseDate, String status, String deliveryName, String deliveryAddressLine1, String deliveryAddressLine2, String deliveryCity, String deliveryState, String deliveryPostalCode, String deliveryContactNumber, List<PurchaseDetail> purchaseDetailList, Customer customer) {
         this.id = id;
         this.totalAmount = totalAmount;
         this.purchaseDate = purchaseDate;
@@ -83,7 +83,7 @@ public class Purchase {
         this.deliveryState = deliveryState;
         this.deliveryPostalCode = deliveryPostalCode;
         this.deliveryContactNumber = deliveryContactNumber;
-        this.purchaseDetailSet = purchaseDetailSet;
+        this.purchaseDetailList = purchaseDetailList;
         this.customer = customer;
     }
 
@@ -139,8 +139,8 @@ public class Purchase {
         return customer;
     }
 
-    public Set<PurchaseDetail> getPurchaseDetailSet() {
-        return purchaseDetailSet;
+    public List<PurchaseDetail> getPurchaseDetailList() {
+        return purchaseDetailList;
     }
 
     // =============================================
@@ -195,12 +195,12 @@ public class Purchase {
         this.customer = customer;
     }
 
-    public void setPurchaseDetailSet(Set<PurchaseDetail> purchaseDetailSet) {
-        this.purchaseDetailSet = purchaseDetailSet;
+    public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailSet) {
+        this.purchaseDetailList = purchaseDetailSet;
     }
 
     public void addPurchaseDetailToPurchase(PurchaseDetail purchaseDetail) {
-        purchaseDetailSet.add(purchaseDetail);
+        purchaseDetailList.add(purchaseDetail);
     }
 
     // =============================================
@@ -230,11 +230,11 @@ public class Purchase {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Purchase purchase = (Purchase) o;
-        return Objects.equals(id, purchase.id);
+        return Objects.equals(totalAmount, purchase.totalAmount) && Objects.equals(purchaseDate, purchase.purchaseDate) && Objects.equals(status, purchase.status) && Objects.equals(deliveryName, purchase.deliveryName) && Objects.equals(deliveryAddressLine1, purchase.deliveryAddressLine1) && Objects.equals(deliveryAddressLine2, purchase.deliveryAddressLine2) && Objects.equals(deliveryCity, purchase.deliveryCity) && Objects.equals(deliveryState, purchase.deliveryState) && Objects.equals(deliveryPostalCode, purchase.deliveryPostalCode) && Objects.equals(deliveryContactNumber, purchase.deliveryContactNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(totalAmount, purchaseDate, status, deliveryName, deliveryAddressLine1, deliveryAddressLine2, deliveryCity, deliveryState, deliveryPostalCode, deliveryContactNumber);
     }
 }
