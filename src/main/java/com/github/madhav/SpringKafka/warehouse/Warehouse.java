@@ -130,7 +130,8 @@ public class Warehouse {
         this.purchaseDetailList = purchaseDetailList;
     }
 
-    public void addPurchaseDetail(PurchaseDetail purchaseDetail) {
+    public void addPurchaseDetailToWarehouse(PurchaseDetail purchaseDetail) {
+//        purchaseDetail.setWarehouse(this);
         purchaseDetailList.add(purchaseDetail);
     }
 

@@ -89,10 +89,14 @@ public class CustomerService {
 
         Purchase purchase = new Purchase();
         purchase.setCustomer(customer);
+        purchase.setStatus("ORDER RECEIVED");
+        purchase.setPurchaseDate(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
+
+        Purchase savedPurchase = purchaseService.addNewPurchase(purchase);
 
         Double totalAmount = 0.0;
         for (CartDetail cartDetail : cartDetailSet) {
-//            PurchaseDetail purchaseDetail = new PurchaseDetail();
+
             Item item = cartDetail.getItem();
             Long stock = item.getStock();
             Long quantity = cartDetail.getQuantity();
@@ -101,22 +105,12 @@ public class CustomerService {
             totalAmount += amount;
 
             if (stock < quantity) throw new IllegalStateException("Insufficient Stock of Item");
-            itemService.reduceItemStockForWarehouses(item, quantity, purchase);
+            itemService.reduceItemStockForWarehouses(item, quantity, savedPurchase);
 
-//            itemService.reduceItemStock(item.getId(), quantity);
-
-//            purchaseDetail.setAmount(amount);
-//            purchaseDetail.setQuantity(quantity);
-//            purchaseDetail.setItem(item);
-//            purchaseDetail.setPurchase(purchase);
-//            purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
         }
 
-        purchase.setTotalAmount(totalAmount);
-        purchase.setStatus("ORDER RECEIVED");
-        purchase.setPurchaseDate(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
-
-        customer.addPurchaseToCustomer(purchaseService.addNewPurchase(purchase));
+        savedPurchase.setTotalAmount(totalAmount);
+        customer.addPurchaseToCustomer(savedPurchase);
         cartService.clearCart(cart.getId());
     }
 

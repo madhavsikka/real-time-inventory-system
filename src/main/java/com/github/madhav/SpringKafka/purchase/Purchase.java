@@ -200,6 +200,7 @@ public class Purchase {
     }
 
     public void addPurchaseDetailToPurchase(PurchaseDetail purchaseDetail) {
+//        purchaseDetail.setPurchase(this);
         purchaseDetailList.add(purchaseDetail);
     }
 

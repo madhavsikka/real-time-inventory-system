@@ -91,12 +91,14 @@ public class ItemService {
             purchaseDetail.setAmount(unitPrice * reduceFromThis);
             purchaseDetail.setQuantity(reduceFromThis);
             purchaseDetail.setItem(item);
-            purchaseDetail.setPurchase(purchase);
             purchaseDetail.setStatus("ORDER RECEIVED");
+            purchaseDetail.setPurchase(purchase);
             purchaseDetail.setWarehouse(warehouse);
-            purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
 
-            warehouse.addPurchaseDetail(purchaseDetail);
+            PurchaseDetail savedPurchaseDetail = purchaseDetailService.addNewPurchaseDetail(purchaseDetail);
+
+            purchase.addPurchaseDetailToPurchase(savedPurchaseDetail);
+            warehouse.addPurchaseDetailToWarehouse(savedPurchaseDetail);
 
             reduceStockBy -= reduceFromThis;
             itemDetailService.setStock(itemDetail.getId(), availableStock - reduceFromThis);
