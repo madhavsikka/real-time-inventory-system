@@ -1,7 +1,9 @@
 package com.github.madhav.SpringKafka.warehouse;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.madhav.SpringKafka.address.Address;
 import com.github.madhav.SpringKafka.item_detail.ItemDetail;
+import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -40,6 +42,11 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<ItemDetail> itemDetailList = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<PurchaseDetail> purchaseDetailList = new ArrayList<>();
+
     // ========================================================
     // Many-to-one relationship between warehouses and address
     // ========================================================
@@ -55,16 +62,18 @@ public class Warehouse {
     public Warehouse() {
     }
 
-    public Warehouse(String name, List<ItemDetail> itemDetailList, Address address) {
+    public Warehouse(String name, List<ItemDetail> itemDetailList, List<PurchaseDetail> purchaseDetailList, Address address) {
         this.name = name;
         this.itemDetailList = itemDetailList;
+        this.purchaseDetailList = purchaseDetailList;
         this.address = address;
     }
 
-    public Warehouse(Long id, String name, List<ItemDetail> itemDetailList, Address address) {
+    public Warehouse(Long id, String name, List<ItemDetail> itemDetailList, List<PurchaseDetail> purchaseDetailList, Address address) {
         this.id = id;
         this.name = name;
         this.itemDetailList = itemDetailList;
+        this.purchaseDetailList = purchaseDetailList;
         this.address = address;
     }
 
@@ -89,6 +98,10 @@ public class Warehouse {
         return address;
     }
 
+    public List<PurchaseDetail> getPurchaseDetailList() {
+        return purchaseDetailList;
+    }
+
     // =============================================
     // Setters
     // =============================================
@@ -111,6 +124,14 @@ public class Warehouse {
 
     public void addItemDetail(ItemDetail itemDetail) {
         itemDetailList.add(itemDetail);
+    }
+
+    public void setPurchaseDetailList(List<PurchaseDetail> purchaseDetailList) {
+        this.purchaseDetailList = purchaseDetailList;
+    }
+
+    public void addPurchaseDetail(PurchaseDetail purchaseDetail) {
+        purchaseDetailList.add(purchaseDetail);
     }
 
     @Override

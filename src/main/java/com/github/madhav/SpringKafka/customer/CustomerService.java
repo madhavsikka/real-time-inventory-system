@@ -7,7 +7,6 @@ import com.github.madhav.SpringKafka.item.Item;
 import com.github.madhav.SpringKafka.item.ItemService;
 import com.github.madhav.SpringKafka.purchase.Purchase;
 import com.github.madhav.SpringKafka.purchase.PurchaseService;
-import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
 import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,21 +92,24 @@ public class CustomerService {
 
         Double totalAmount = 0.0;
         for (CartDetail cartDetail : cartDetailSet) {
-            PurchaseDetail purchaseDetail = new PurchaseDetail();
+//            PurchaseDetail purchaseDetail = new PurchaseDetail();
             Item item = cartDetail.getItem();
             Long stock = item.getStock();
             Long quantity = cartDetail.getQuantity();
             Double amount = cartDetail.getAmount();
 
-            if (stock < quantity) throw new IllegalStateException("Insufficient Stock of Item");
-            itemService.reduceItemStock(item.getId(), quantity);
-
             totalAmount += amount;
-            purchaseDetail.setAmount(amount);
-            purchaseDetail.setQuantity(quantity);
-            purchaseDetail.setItem(item);
-            purchaseDetail.setPurchase(purchase);
-            purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
+
+            if (stock < quantity) throw new IllegalStateException("Insufficient Stock of Item");
+            itemService.reduceItemStockForWarehouses(item, quantity, purchase);
+
+//            itemService.reduceItemStock(item.getId(), quantity);
+
+//            purchaseDetail.setAmount(amount);
+//            purchaseDetail.setQuantity(quantity);
+//            purchaseDetail.setItem(item);
+//            purchaseDetail.setPurchase(purchase);
+//            purchase.addPurchaseDetailToPurchase(purchaseDetailService.addNewPurchaseDetail(purchaseDetail));
         }
 
         purchase.setTotalAmount(totalAmount);
