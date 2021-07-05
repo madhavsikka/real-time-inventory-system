@@ -39,16 +39,8 @@ public class PurchaseController {
     @PutMapping(path = "/{purchaseId}")
     public void updatePurchase(
             @PathVariable("purchaseId") Long purchaseId,
-            @RequestParam(required = false) Double totalAmount,
-            @RequestParam(required = false) String status) {
-        purchaseService.updatePurchase(purchaseId, totalAmount, status);
-    }
-
-    @PostMapping(path = "/{purchaseId}/address/add/{addressId}")
-    public void addAddressToPurchase(
-            @PathVariable("purchaseId") Long purchaseId,
-            @PathVariable("addressId") Long addressId) {
-        purchaseService.addAddressToPurchase(purchaseId, addressId);
+            @RequestParam(required = false) Double totalAmount) {
+        purchaseService.updatePurchase(purchaseId, totalAmount);
     }
 
 //    @PostMapping(path = "/{purchaseId}/purchase_details/{purchaseDetailId}/add")

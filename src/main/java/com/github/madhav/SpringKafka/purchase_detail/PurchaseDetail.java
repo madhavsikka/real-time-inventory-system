@@ -46,6 +46,7 @@ public class PurchaseDetail {
     private Item item;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "FK_WAREHOUSE_ID")
     private Warehouse warehouse;
 

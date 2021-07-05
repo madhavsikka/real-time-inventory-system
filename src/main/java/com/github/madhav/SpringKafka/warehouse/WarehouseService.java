@@ -42,6 +42,11 @@ public class WarehouseService {
         warehouseRepository.save(warehouse);
     }
 
+    public List<PurchaseDetail> getPurchaseDetailsOfWarehouse(Long warehouseId) {
+        Warehouse warehouse = getWarehouseById(warehouseId);
+        return warehouse.getPurchaseDetailList();
+    }
+
     @Transactional
     public void addNewItemDetailToWarehouse(Long warehouseId, Long itemId, Long stock) {
         Warehouse warehouse = getWarehouseById(warehouseId);

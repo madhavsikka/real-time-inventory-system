@@ -1,13 +1,10 @@
 package com.github.madhav.SpringKafka.purchase_detail;
 
-import com.github.madhav.SpringKafka.item.Item;
-import com.github.madhav.SpringKafka.purchase.Purchase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class PurchaseDetailService {
@@ -33,24 +30,12 @@ public class PurchaseDetailService {
     }
 
     @Transactional
-    public PurchaseDetail updatePurchaseDetail(Long purchaseDetailId, Long quantity, Double amount,
-                                               Purchase purchase, Item item) {
+    public PurchaseDetail updatePurchaseDetailStatus(Long purchaseDetailId, String status) {
 
         PurchaseDetail purchaseDetail = purchaseDetailRepository.findById(purchaseDetailId)
                 .orElseThrow(() -> new IllegalStateException("Purchase Detail ID does not exist"));
 
-        if (quantity > 0 && !Objects.equals(quantity, purchaseDetail.getQuantity())) {
-            purchaseDetail.setQuantity(quantity);
-        }
-        if (amount > 0 && !Objects.equals(amount, purchaseDetail.getAmount())) {
-            purchaseDetail.setAmount(amount);
-        }
-        if (purchase != null && !Objects.equals(purchase, purchaseDetail.getPurchase())) {
-            purchaseDetail.setPurchase(purchase);
-        }
-        if (item != null && !Objects.equals(item, purchaseDetail.getItem())) {
-            purchaseDetail.setItem(item);
-        }
+        purchaseDetail.setStatus(status);
         return purchaseDetail;
     }
 

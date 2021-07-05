@@ -1,5 +1,6 @@
 package com.github.madhav.SpringKafka.warehouse;
 
+import com.github.madhav.SpringKafka.purchase_detail.PurchaseDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,11 @@ public class WarehouseController {
     @GetMapping(path = "/{warehouseId}")
     public Warehouse getWarehouseById(@PathVariable("warehouseId") Long warehouseId) {
         return warehouseService.getWarehouseById(warehouseId);
+    }
+
+    @GetMapping(path = "/{warehouseId}/purchase_details")
+    public List<PurchaseDetail> getPurchaseDetailsOfWarehouse(@PathVariable("warehouseId") Long warehouseId) {
+        return warehouseService.getPurchaseDetailsOfWarehouse(warehouseId);
     }
 
     @PostMapping

@@ -62,6 +62,10 @@ public class Warehouse {
     public Warehouse() {
     }
 
+    public Warehouse(String name) {
+        this.name = name;
+    }
+
     public Warehouse(String name, List<ItemDetail> itemDetailList, List<PurchaseDetail> purchaseDetailList, Address address) {
         this.name = name;
         this.itemDetailList = itemDetailList;
@@ -131,7 +135,6 @@ public class Warehouse {
     }
 
     public void addPurchaseDetailToWarehouse(PurchaseDetail purchaseDetail) {
-//        purchaseDetail.setWarehouse(this);
         purchaseDetailList.add(purchaseDetail);
     }
 

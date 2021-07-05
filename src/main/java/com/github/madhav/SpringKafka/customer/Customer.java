@@ -58,6 +58,14 @@ public class Customer {
         this.cart = new Cart();
     }
 
+    public Customer(String firstName, String lastName, String contactNumber, String email, Cart cart) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contactNumber = contactNumber;
+        this.email = email;
+        this.cart = cart;
+    }
+
     public Customer(String firstName, String lastName, String contactNumber, String email, Cart cart, Set<Purchase> purchaseSet) {
         this.firstName = firstName;
         this.lastName = lastName;

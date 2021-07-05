@@ -91,7 +91,7 @@ public class ItemService {
             purchaseDetail.setAmount(unitPrice * reduceFromThis);
             purchaseDetail.setQuantity(reduceFromThis);
             purchaseDetail.setItem(item);
-            purchaseDetail.setStatus("ORDER RECEIVED");
+            purchaseDetail.setStatus("ORDER_RECEIVED");
             purchaseDetail.setPurchase(purchase);
             purchaseDetail.setWarehouse(warehouse);
 

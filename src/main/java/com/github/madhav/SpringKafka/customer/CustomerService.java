@@ -89,7 +89,6 @@ public class CustomerService {
 
         Purchase purchase = new Purchase();
         purchase.setCustomer(customer);
-        purchase.setStatus("ORDER RECEIVED");
         purchase.setPurchaseDate(new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date()));
 
         Purchase savedPurchase = purchaseService.addNewPurchase(purchase);
