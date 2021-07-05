@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -91,9 +93,10 @@ public class ItemService {
             purchaseDetail.setAmount(unitPrice * reduceFromThis);
             purchaseDetail.setQuantity(reduceFromThis);
             purchaseDetail.setItem(item);
-            purchaseDetail.setStatus("ORDER_RECEIVED");
+            purchaseDetail.setStatus("ORDER_PLACED");
             purchaseDetail.setPurchase(purchase);
             purchaseDetail.setWarehouse(warehouse);
+            purchaseDetail.setLastUpdatedTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
             PurchaseDetail savedPurchaseDetail = purchaseDetailService.addNewPurchaseDetail(purchaseDetail);
 

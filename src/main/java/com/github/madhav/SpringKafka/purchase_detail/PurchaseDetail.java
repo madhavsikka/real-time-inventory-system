@@ -27,6 +27,7 @@ public class PurchaseDetail {
     private Long quantity;
     private Double amount;
     private String status;
+    private String lastUpdatedTimestamp;
 
     // =======================================================
     // Many-to-one mapping of purchase details and purchase
@@ -55,25 +56,6 @@ public class PurchaseDetail {
     // =============================================
 
     public PurchaseDetail() {
-    }
-
-    public PurchaseDetail(Long quantity, Double amount, String status, Purchase purchase, Item item, Warehouse warehouse) {
-        this.quantity = quantity;
-        this.amount = amount;
-        this.status = status;
-        this.purchase = purchase;
-        this.item = item;
-        this.warehouse = warehouse;
-    }
-
-    public PurchaseDetail(Long id, Long quantity, Double amount, String status, Purchase purchase, Item item, Warehouse warehouse) {
-        this.id = id;
-        this.quantity = quantity;
-        this.amount = amount;
-        this.status = status;
-        this.purchase = purchase;
-        this.item = item;
-        this.warehouse = warehouse;
     }
 
     // =============================================
@@ -109,6 +91,10 @@ public class PurchaseDetail {
         return warehouse;
     }
 
+    public String getLastUpdatedTimestamp() {
+        return lastUpdatedTimestamp;
+    }
+
     // =============================================
     // Setters
     // =============================================
@@ -138,6 +124,10 @@ public class PurchaseDetail {
         this.status = status;
     }
 
+    public void setLastUpdatedTimestamp(String lastUpdatedTimestamp) {
+        this.lastUpdatedTimestamp = lastUpdatedTimestamp;
+    }
+
     public void setWarehouse(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
@@ -148,6 +138,8 @@ public class PurchaseDetail {
                 "id=" + id +
                 ", quantity=" + quantity +
                 ", amount=" + amount +
+                ", status='" + status + '\'' +
+                ", lastUpdatedTimestamp='" + lastUpdatedTimestamp + '\'' +
                 ", purchase=" + purchase +
                 ", item=" + item +
                 ", warehouse=" + warehouse +
@@ -159,11 +151,11 @@ public class PurchaseDetail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PurchaseDetail that = (PurchaseDetail) o;
-        return Objects.equals(quantity, that.quantity) && Objects.equals(amount, that.amount) && Objects.equals(status, that.status) && Objects.equals(purchase, that.purchase) && Objects.equals(item, that.item) && Objects.equals(warehouse, that.warehouse);
+        return Objects.equals(quantity, that.quantity) && Objects.equals(amount, that.amount) && Objects.equals(status, that.status) && Objects.equals(lastUpdatedTimestamp, that.lastUpdatedTimestamp) && Objects.equals(purchase, that.purchase) && Objects.equals(item, that.item) && Objects.equals(warehouse, that.warehouse);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(quantity, amount, status, purchase, item, warehouse);
+        return Objects.hash(quantity, amount, status, lastUpdatedTimestamp, purchase, item, warehouse);
     }
 }

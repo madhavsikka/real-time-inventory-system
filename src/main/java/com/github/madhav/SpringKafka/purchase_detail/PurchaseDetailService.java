@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -30,13 +32,13 @@ public class PurchaseDetailService {
     }
 
     @Transactional
-    public PurchaseDetail updatePurchaseDetailStatus(Long purchaseDetailId, String status) {
+    public void updatePurchaseDetailStatus(Long purchaseDetailId, String status) {
 
         PurchaseDetail purchaseDetail = purchaseDetailRepository.findById(purchaseDetailId)
                 .orElseThrow(() -> new IllegalStateException("Purchase Detail ID does not exist"));
 
         purchaseDetail.setStatus(status);
-        return purchaseDetail;
+        purchaseDetail.setLastUpdatedTimestamp(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 
 }
