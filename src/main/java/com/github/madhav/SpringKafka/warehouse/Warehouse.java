@@ -51,7 +51,7 @@ public class Warehouse {
     // Many-to-one relationship between warehouses and address
     // ========================================================
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "FK_ADDRESS_ID")
     private Address address;
 

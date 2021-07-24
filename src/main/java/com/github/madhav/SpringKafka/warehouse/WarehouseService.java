@@ -46,16 +46,20 @@ public class WarehouseService {
 
     @Transactional
     public void addNewItemDetailToWarehouse(Long warehouseId, Long itemId, Long stock) {
+
         Warehouse warehouse = getWarehouseById(warehouseId);
         Item item = itemService.getItemById(itemId);
 
-        ItemDetail itemDetail = new ItemDetail();
-        itemDetail.setStock(stock);
-        itemDetail.setItem(item);
-        itemDetail.setWarehouse(warehouse);
-        ItemDetail createdItemDetail = itemDetailService.addNewItemDetail(itemDetail);
-        warehouse.addItemDetail(createdItemDetail);
-        item.addItemDetail(createdItemDetail);
+        if (!itemDetailService.addStockByItemIdAndWarehouseId(itemId, warehouseId, stock)) {
+            ItemDetail itemDetail = new ItemDetail();
+            itemDetail.setStock(stock);
+            itemDetail.setItem(item);
+            itemDetail.setWarehouse(warehouse);
+            ItemDetail createdItemDetail = itemDetailService.addNewItemDetail(itemDetail);
+            warehouse.addItemDetail(createdItemDetail);
+            item.addItemDetail(createdItemDetail);
+        }
+
         item.setStock(item.getStock() + stock);
     }
 

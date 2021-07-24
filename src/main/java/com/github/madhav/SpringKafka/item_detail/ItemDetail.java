@@ -7,7 +7,10 @@ import com.github.madhav.SpringKafka.warehouse.Warehouse;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ITEM_DETAIL")
+@Table(
+        name = "ITEM_DETAIL"
+//        uniqueConstraints = @UniqueConstraint(columnNames = {"FK_ITEM_ID", "FK_WAREHOUSE_ID"})
+)
 public class ItemDetail {
 
     @Id
