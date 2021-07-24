@@ -7,3 +7,6 @@ ___
 - Apache Kafka
 - Apache Spark
 - InfluxDB + Grafana
+___
+### Database Schema
+![Database Schema](./static/Database%20Schema%202.png)
