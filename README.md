@@ -6,7 +6,7 @@ ___
 - MySQL
 - Debezium CDC Connector
 - Apache Kafka
-- Apache Spark
+- Apache Spark ([Link to accompanying application](https://github.com/madhavsikka/Spark-Order-Consumer))
 - InfluxDB + Grafana
 ___
 ### Architecture Diagram
